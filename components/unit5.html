@@ -3,30 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unit Algorithms</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="units.css">
+    <title>Unit5</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .section {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #00adb5;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .btn {
+            text-decoration: none;
+            background: #00adb5;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-5px);
+            background: #393e46;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 1rem;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="unit-container">
-        <h1>Unit 5</h1>
-        <!-- Direct links for each algorithm -->
-        <a href="HeapSort.html">
-            <button>
-                <i class="fas fa-sort"></i> Heap Sort
-            </button>
-        </a>
-        <a href="TSP.html">
-            <button>
-                <i class="fas fa-network-wired"></i> Travelling Salesman Problem
-            </button>
-        </a>
-        <a href="NQueens.html">
-            <button>
-                <i class="fas fa-network-wired"></i> N Queens Game
-            </button>
-        </a>
+    <h1>AlgoQuest</h1>
+    <div class="container">
+        <div class="section">
+            <h2>HeapSort</h2>
+            <p>Heapsort is a comparison-based sorting algorithm that uses a binary heap data structure.<br> It is an in-place algorithm (requires no extra space apart from the input array) with a time complexity of O(n log n).</p>
+            <div class="buttons">
+                <a href="HeapSort.html" class="btn">HeapSort</a>
+                <a href="https://en.wikipedia.org/wiki/Heapsort" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="HeapSortAnimation.gif" alt="HeapSort Animation">
+            </div>
+        </div>
         
+        <div class="section">
+            <h2>N-Queens</h2>
+            <p>The N-Queens problem is a classic combinatorial problem in which the goal is to place N queens on an N × N chessboard so that:<br>No two queens attack each other.<br>Queens cannot share the same row, column, or diagonal.</p>
+            <div class="buttons">
+                <a href="NQueens.html" class="btn">NQueens Game</a>
+                <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle" target="_blank" class="btn">Learn More</a>
+            </div>
+            <img src="NQueens.gif" alt="NQueens Animation" style="width: 300px; height: 200px; margin-top: 20px;">
+
+
+        </div>
+
+        <div class="section">
+            <h2>Travelling Sales Man</h2>
+            <p> The Traveling Salesman Problem (TSP) is a classic optimization problem where the goal is:<br>
+                To find the shortest possible route that visits each city exactly once and returns to the starting city.<br>
+                It is represented as a graph, where cities are nodes and distances between them are edges.</p>
+            <div class="buttons">
+                <a href="TSP.html" class="btn">Travelling Sales Man</a>
+                <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="Branchbound.gif" alt="TSP Animation">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Limitations of Algorithm Power</h2>
+            <p> The P vs NP problem explores the limitations of algorithms in solving computational problems. P represents problems solvable in polynomial time, while NP includes problems whose solutions can be verified in polynomial time. NP-complete problems are the hardest in NP; solving one efficiently would mean all NP problems can be solved efficiently, but it's unknown if P=NP </p>
+            <div class="buttons">
+                <a href="https://en.wikipedia.org/wiki/P_(complexity)" target="_blank" class="btn">P class</a>
+                
+            </div>
+            <div class="buttons">
+               <a href="https://en.wikipedia.org/wiki/NP_(complexity)" target="_blank" class="btn">NP class</a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>BackTracking</h2>
+            <p> Backtracking is a general algorithmic technique used to solve problems incrementally by exploring all possible solutions. It builds solutions step-by-step and abandons a solution ("backtracks") as soon as it determines that it cannot lead to a valid solution.<br>Learn more about this after playing the NQueens game.</p>
+            <div class="buttons">
+                <a href="https://www.geeksforgeeks.org/backtracking-algorithms/" class="btn">Read about BackTracking</a>
+                <a href="https://www.youtube.com/watch?v=0DeznFqrgAI" target="_blank" class="btn">Watch about BackTracking</a>
+            </div>
+            
+        </div>
+
+        <div class="section">
+            <h2>Branch and Bound</h2>
+            <p> Branch and Bound is an algorithmic technique used to solve optimization problems by systematically exploring the solution space. It divides the problem into smaller subproblems (branching) and eliminates subproblems that cannot lead to the optimal solution (bounding).</p>
+            <div class="buttons">
+                <a href="https://www.geeksforgeeks.org/branch-and-bound-algorithm/" class="btn">Read about Branch and Bound</a>
+                <a href="https://www.youtube.com/watch?v=hvDx7q6vcWM" target="_blank" class="btn">Watch about Branch and Bound</a>
+            </div>
+            
+        </div>
+
     </div>
+    <div class="footer">&copy; 2025 AlgoQuest. All Rights Reserved.</div>
 </body>
 </html>
