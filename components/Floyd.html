@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floyd's Algorithm Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-image: linear-gradient(to bottom, #273b40, #1d1d1d);
+      color: #e0e0e0;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #e0e0e0;
+    }
+
+    .game-container {
+      margin: 20px auto;
+      max-width: 800px;
+      padding: 20px;
+      background: #333;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .graph {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .node {
+      width: 80px;
+      height: 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #007bff;
+      border-radius: 50%;
+      background: #1d3557;
+      color: #a8dadc;
+      font-weight: bold;
+    }
+
+    table {
+      margin: 0 auto;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    input[type="number"] {
+      width: 50px;
+      padding: 5px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #e0e0e0;
+    }
+
+    .correct {
+      color: #2ecc71;
+    }
+
+    .incorrect {
+      color: #e74c3c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Floyd's Algorithm Game</h1>
+  <div class="game-container">
+    <h2>Select Level</h2>
+    <button class="button" id="easy-button">Easy</button>
+    <button class="button" id="hard-button">Hard</button>
+    <div id="game-content"></div>
+  </div>
+  <script>
+    const easyMatrix = [
+      [0, Infinity, 3],
+      [Infinity, 0, 1],
+      [2, Infinity, 0]
+    ];
+
+    const easySolution = [
+      [0, 4, 3],
+      [3, 0, 1],
+      [2, 5, 0]
+    ];
+
+    const hardMatrix = [
+      [0, 3, Infinity, Infinity, 7],
+      [8, 0, 2, Infinity, Infinity],
+      [5, Infinity, 0, 1, Infinity],
+      [Infinity, Infinity, Infinity, 0, 4],
+      [Infinity, Infinity, 3, 2, 0]
+    ];
+
+    const hardSolution = [
+      [0, 3, 5, 6, 7],
+      [5, 0, 2, 3, 7],
+      [5, 8, 0, 1, 5],
+      [9, 12, 6, 0, 4],
+      [7, 10, 3, 2, 0]
+    ];
+
+    function createTable(matrix, level) {
+      let tableHTML = '<table><thead><tr><th></th>';
+      for (let i = 0; i < matrix.length; i++) {
+        tableHTML += `<th>${String.fromCharCode(65 + i)}</th>`;
+      }
+      tableHTML += '</tr></thead><tbody>';
+      for (let i = 0; i < matrix.length; i++) {
+        tableHTML += `<tr><td>${String.fromCharCode(65 + i)}</td>`;
+        for (let j = 0; j < matrix.length; j++) {
+          const value = matrix[i][j] === Infinity ? 'Infinity' : matrix[i][j];
+          const disabled = i === j ? 'disabled' : '';
+          tableHTML += `<td><input type="number" data-row="${i}" data-col="${j}" value="${value}" ${disabled}></td>`;
+        }
+        tableHTML += '</tr>';
+      }
+      tableHTML += '</tbody></table>';
+      tableHTML += `<button class="button" id="submit-button">Check</button>`;
+      document.getElementById("game-content").innerHTML = tableHTML;
+
+      document.getElementById("submit-button").addEventListener("click", () => {
+        checkSolution(level);
+      });
+    }
+
+    function checkSolution(level) {
+      const solution = level === 'easy' ? easySolution : hardSolution;
+      const playerMatrix = [];
+      for (let i = 0; i < solution.length; i++) {
+        playerMatrix[i] = [];
+        for (let j = 0; j < solution.length; j++) {
+          const input = document.querySelector(`input[data-row="${i}"][data-col="${j}"]`).value;
+          playerMatrix[i][j] = input === 'Infinity' ? Infinity : parseFloat(input);
+        }
+      }
+
+      let correct = true;
+      for (let i = 0; i < solution.length; i++) {
+        for (let j = 0; j < solution.length; j++) {
+          if (playerMatrix[i][j] !== solution[i][j]) {
+            correct = false;
+            break;
+          }
+        }
+      }
+
+      const result = document.createElement("div");
+      result.className = "result";
+      result.textContent = correct
+        ? "Congratulations! You've completed the matrix correctly."
+        : "Oops! Some entries are incorrect. Try again!";
+      result.classList.add(correct ? "correct" : "incorrect");
+      document.getElementById("game-content").appendChild(result);
+    }
+
+    document.getElementById("easy-button").addEventListener("click", () => {
+      createTable(easyMatrix, 'easy');
+    });
+
+    document.getElementById("hard-button").addEventListener("click", () => {
+      createTable(hardMatrix, 'hard');
+    });
+  </script>
+</body>
+</html>

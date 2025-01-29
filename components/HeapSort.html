@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HeapSort Game - Learn Through Practice</title>
+    <link rel="stylesheet" href="HeapSort.css">
+</head>
+<body>
+    <div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <span class="game-title">HeapSort Game</span>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="instruction-panel">
+                    <h3>Current Phase: <span id="currentPhase">Initial Array</span></h3>
+                    <div id="instructions" class="instructions"></div>
+                    <div class="scoring-info">
+                        <h4>Scoring System:</h4>
+                        <ul>
+                            <li>Correct Heapify: +10 points</li>
+                            <li>Root Extraction: +20 points</li>
+                            <li>Mistake: -5 points</li>
+                            <li>Using Hint: -2 points</li>
+                        </ul>
+                    </div>
+                </div>
+            
+                <div id="message" class="message"></div>
+                
+                <div class="game-controls">
+                    <div class="button-container">
+                        <button id="newGame" class="button">New Game</button>
+                        <button id="showHint" class="button button-outline">
+                            <svg class="hint-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21.5L17.5 13 13 8.5l-8.5 8.5L3 21l4.5-.5z"/>
+                                <path d="M14.5 6.5l3 3"/>
+                            </svg>
+                            <span>Show Hint (-2 points)</span>
+                        </button>
+                        <button id="visualizeExample" class="button button-secondary">See Example</button>
+                    </div>
+                    
+                    <div class="game-stats">
+                        <div class="stat-item">
+                            <svg class="trophy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9H4.5C3.12 9 2 7.88 2 6.5C2 5.12 3.12 4 4.5 4H6V9Z"/>
+                                <path d="M18 9H19.5C20.88 9 22 7.88 22 6.5C22 5.12 20.88 4 19.5 4H18V9Z"/>
+                                <path d="M6 4H18V9C18 11.76 15.76 14 13 14H11C8.24 14 6 11.76 6 9V4Z"/>
+                                <path d="M8 21H16"/>
+                                <path d="M12 14V17"/>
+                                <path d="M10 17H14"/>
+                            </svg>
+                            <span id="score-controls">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg class="mistake-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 6L6 18"/>
+                                <path d="M6 6L18 18"/>
+                            </svg>
+                            <span id="mistakes-controls">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <svg class="clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6V12L16 14"/>
+                            </svg>
+                            <span id="timer-controls">0s</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="algorithm-state">
+                    <div class="initial-array">
+                        <h4>Initial Array</h4>
+                        <div id="initialArray" class="array-display"></div>
+                    </div>
+                    <div class="current-state">
+                        <h4>Current Binary Heap</h4>
+                        <div class="heap-container">
+                            <svg id="heapVisualization" viewBox="0 0 800 300"></svg>
+                        </div>
+                    </div>
+                    <div class="sorted-array-container">
+                        <h4>Sorted Array (Min to Max)</h4>
+                        <div id="sortedArray" class="array-display"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="HeapSort.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #273b40, #1d1d1d);
+    color: #cae9ea;
+  }
+  
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: #cae9ea;
+    color: #1d1d1d;
+  }
+  
+  h1 {
+    margin: 0;
+    font-size: 3.5rem;
+  }
+  
+  .login-btn {
+    padding: 10px 20px;
+    background-color: #3c4748;
+    color: #cae9ea;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .login-btn:hover {
+    background-color: #022a4a;
+  }
+  
+  /* Roadmap Section */
+  .roadmap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 20px;
+    position: relative;
+  }
+  
+  .circle {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    background: #222e2f;
+    border: 3px solid #208cdc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .circle:nth-child(odd) {
+    align-self: flex-start;
+  }
+  
+  .circle:nth-child(even) {
+    align-self: flex-end;
+  }
+  
+  .circle:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px #208cdc;
+  }
+  
+  .circle img {
+    width: 60%;
+    height: auto;
+  }
+  
+  .tooltip {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #208cdc;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(10px);
+  }
+  
+  .circle:hover .tooltip {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .texts h1{
+    text-align: center;
+    font-size: 50px;
+    color: #cae9ea;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .roadmap {
+      flex-direction: column;
+    }
+  
+    .circle {
+      margin: 20px auto;
+    }
+  }
+  

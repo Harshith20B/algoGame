@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DFS Maze Game</title>
+  <link rel="stylesheet" href="dfs.css">
+</head>
+<body>
+  <div id="game-container">
+    <h1>DFS Maze Game</h1>
+    <canvas id="maze" width="400" height="400"></canvas>
+    <div id="instructions">
+      <p>Use the arrow keys or WASD to navigate through the maze.</p>
+      <p>Find the exit and complete the maze!</p>
+    </div>
+    <button id="start-button">Start Game</button>
+    <div id="timer"></div>
+    <div id="scores-section">
+      <h2>Top Scores</h2>
+      <ol id="scores-list"></ol>
+    </div>
+  </div>
+  <script src="dfs.js"></script>
+</body>
+</html>

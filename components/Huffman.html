@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Encoding Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 5px;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #encoded-word {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Escape the Room Game</h1>
+        <p>Decode the binary string to escape the room!</p>
+
+        <div id="freq-table-container">
+            <h2>Character Frequency Table</h2>
+            <ul id="freq-table"></ul>
+        </div>
+
+        <div id="encoded-word-container">
+            <h2>Encoded Binary String</h2>
+            <p id="encoded-word"></p>
+        </div>
+
+        <div id="guess-container">
+            <h2>Enter your Guess:</h2>
+            <input type="text" id="guess" placeholder="Your decoded word">
+            <button id="submit-guess">Submit Guess</button>
+        </div>
+
+        <div id="game-result" class="hidden">
+            <h3 id="result-message"></h3>
+            <button id="retry-button">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        class TreeNode {
+            constructor(char, weight, left = null, right = null) {
+                this.char = char;
+                this.weight = weight;
+                this.left = left;
+                this.right = right;
+            }
+        }
+
+        function encode(text, codes) {
+            const result = [];
+            for (const char of text) {
+                result.push(codes.get(char));
+            }
+            return result.join('');
+        }
+
+        function decode(encodedText, codes) {
+            let result = '';
+            const reversedCodes = {};
+            Array.from(codes.entries()).forEach(([key, value]) => {
+                reversedCodes[value] = key;
+            });
+
+            let currentCode = '';
+            for (const bit of encodedText) {
+                currentCode += bit;
+                if (reversedCodes[currentCode]) {
+                    result += reversedCodes[currentCode];
+                    currentCode = '';
+                }
+            }
+
+            return result;
+        }
+
+        function getCharsFrequency(text) {
+            const freq = new Map();
+            for (const char of text) {
+                const count = freq.get(char);
+                freq.set(char, count ? count + 1 : 1);
+            }
+            return Array.from(freq).sort((a, b) => b[1] - a[1]);
+        }
+
+        function getTree(freq) {
+            const nodes = [];
+            for (const [char, weight] of freq) {
+                nodes.push(new TreeNode(char, weight));
+            }
+
+            while (nodes.length > 1) {
+                nodes.sort((a, b) => a.weight - b.weight);
+                const left = nodes.shift();
+                const right = nodes.shift();
+                const parent = new TreeNode('', left.weight + right.weight, left, right);
+                nodes.push(parent);
+            }
+
+            return nodes[0];
+        }
+
+        function getCharCodesFromSource(text) {
+            const freqArr = getCharsFrequency(text);
+            const tree = getTree(freqArr);
+            const codes = new Map();
+            getCodes(tree, (char, code) => {
+                codes.set(char, code);
+            });
+            return codes;
+        }
+
+        function getCodes(tree, cb, code = '') {
+            if (!tree) return;
+            if (!tree.left && !tree.right) {
+                cb(tree.char, code);
+                return;
+            }
+            getCodes(tree.left, cb, code + '0');
+            getCodes(tree.right, cb, code + '1');
+        }
+
+        function startGame() {
+            const wordList = ["apple", "banana", "orange", "grape", "watermelon"];
+            const word = wordList[Math.floor(Math.random() * wordList.length)];
+
+            // Display Frequency Table
+            const freqArr = getCharsFrequency(word);
+            const freqTableContainer = document.getElementById('freq-table');
+            freqTableContainer.innerHTML = '';
+            freqArr.forEach(([char, freq]) => {
+                const li = document.createElement('li');
+                li.textContent = `${char}: ${freq}`;
+                freqTableContainer.appendChild(li);
+            });
+
+            // Generate Huffman Codes
+            const codes = getCharCodesFromSource(word);
+
+            // Encode the word
+            const encodedWord = encode(word, codes);
+            const encodedWordContainer = document.getElementById('encoded-word');
+            encodedWordContainer.textContent = encodedWord;
+
+            // Guess input and submit button
+            const guessInput = document.getElementById('guess');
+            const submitButton = document.getElementById('submit-guess');
+            const gameResult = document.getElementById('game-result');
+            const resultMessage = document.getElementById('result-message');
+            const retryButton = document.getElementById('retry-button');
+
+            submitButton.onclick = function() {
+                const guess = guessInput.value.trim();
+                const decodedWord = decode(encodedWord, codes);
+
+                if (guess === decodedWord) {
+                    resultMessage.textContent = "Congratulations! You've decoded the word and escaped the room!";
+                    gameResult.classList.remove('hidden');
+                } else {
+                    resultMessage.textContent = `Wrong guess! `;
+                    gameResult.classList.remove('hidden');
+                }
+            };
+
+            retryButton.onclick = function() {
+                gameResult.classList.add('hidden');
+                startGame(); // Restart the game
+            };
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
+<!-- The correct word was: ${decodedWord} -->

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BFS Traversal Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #273b40;
+    }
+
+    #game-container {
+      text-align: center;
+      max-width: 500px;
+      padding: 20px;
+      background-color: #cae9ea;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      color: #1d1d1d;
+    }
+
+    h1 {
+      color: #208cdc;
+    }
+
+    .node {
+      display: inline-block;
+      margin: 10px;
+      padding: 20px;
+      background-color: #3c4748;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      font-size: 20px;
+      transition: background-color 0.3s;
+    }
+
+    .node.visited {
+      background-color: #208cdc; /* Blue for visited nodes */
+    }
+
+    .node.selected {
+      background-color: #f4b400; /* Yellow for selected node */
+    }
+
+    #timer {
+      font-size: 20px;
+      font-weight: bold;
+      color: #208cdc;
+      margin-top: 10px;
+    }
+
+    #message {
+      font-size: 18px;
+      color: #27ae60;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #start-button {
+      padding: 10px 20px;
+      background-color: #208cdc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #start-button:hover {
+      background-color: #1d1d1d;
+    }
+
+    #adjacency-list {
+      font-size: 16px;
+      margin-top: 20px;
+      color: #1d1d1d;
+    }
+
+    #rules {
+      font-size: 18px;
+      color: #1d1d1d;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="game-container">
+    <h1>BFS Traversal Game</h1>
+    <div id="rules">
+      <p><strong>Game Rules:</strong></p>
+      <ul>
+        <li>Click on nodes in the correct BFS traversal order to win.</li>
+        <li>If you click the wrong node, you have to try again.</li>
+        <li>The game consists of three levels. Complete them all to win!</li>
+        <li>Each level's graph is displayed, along with an adjacency list for reference.</li>
+      </ul>
+    </div>
+    <div id="graph">
+      <!-- Nodes will be dynamically created here -->
+    </div>
+    <button id="start-button">Start Game</button>
+    <div id="timer"></div>
+    <div id="message"></div>
+    <div id="adjacency-list">
+      <!-- Adjacency list will be printed here -->
+    </div>
+  </div>
+
+  <script>
+    let level = 1; // Track the current level
+    let maxLevel = 3; // Set the maximum level to stop the game after the third level
+    let adjList;
+    let validBFSOrders;
+
+    let startButton = document.getElementById("start-button");
+    let timerDiv = document.getElementById("timer");
+    let messageDiv = document.getElementById("message");
+    let graphDiv = document.getElementById("graph");
+    let timer;
+    let timeElapsed = 0;
+    let currentBFSOrder = []; // To track the user's current BFS path
+
+    // Function to generate a graph based on the level
+    function generateGraph(level) {
+      if (level > maxLevel) {
+        messageDiv.textContent = `Game Over! You've completed all the levels.`;
+        startButton.disabled = true; // Disable the start button when the game ends
+        return;
+      }
+
+      switch(level) {
+        case 1:
+          adjList = {
+            0: [1, 2],
+            1: [0, 3],
+            2: [0, 4],
+            3: [1, 4],
+            4: [2, 3]
+          };
+          validBFSOrders = [
+            [0, 1, 2, 3, 4],
+            [0, 2, 1, 4, 3]
+          ]; // Multiple valid BFS orders
+          break;
+        case 2:
+          adjList = {
+            0: [1, 2, 3],
+            1: [0, 4],
+            2: [0],
+            3: [0, 4],
+            4: [1, 3, 2]
+          };
+          validBFSOrders = [
+            [0, 1, 2, 3, 4],
+            [0, 1, 3, 4, 2],
+            [0, 3, 2, 4, 1]
+          ]; // Multiple valid BFS orders
+          break;
+        case 3:
+          adjList = {
+            0: [1, 2, 3],
+            1: [0, 4],
+            2: [0, 5],
+            3: [0, 6],
+            4: [1],
+            5: [2],
+            6: [3]
+          };
+          validBFSOrders = [
+            [0, 1, 2, 3, 4, 5, 6],
+            [0, 1, 3, 2, 4, 6, 5]
+          ]; // Multiple valid BFS orders
+          break;
+      }
+      createGraph();
+      displayAdjacencyList();
+    }
+
+    // Function to create graph nodes dynamically in the fixed order provided
+    function createGraph() {
+      graphDiv.innerHTML = ""; // Clear previous graph before re-rendering
+      let nodeOrder = [];
+
+      // Assign the fixed node orders for each level
+      switch(level) {
+        case 1:
+          nodeOrder = [3, 4, 2, 1, 0]; // Level 1 fixed order
+          break;
+        case 2:
+          nodeOrder = [2, 4, 1, 0, 3]; // Level 2 fixed order
+          break;
+        case 3:
+          nodeOrder = [ 4, 2, 6, 5, 1, 3, 0]; // Level 3 fixed order
+          break;
+      }
+
+      // Create the nodes according to the fixed order
+      nodeOrder.forEach((node, index) => {
+        let nodeElement = document.createElement("div");
+        nodeElement.textContent = node;
+        nodeElement.classList.add("node");
+        nodeElement.addEventListener("click", () => handleNodeClick(node, index)); // Pass index
+        graphDiv.appendChild(nodeElement);
+      });
+    }
+
+    // Function to display the adjacency list
+    function displayAdjacencyList() {
+      let adjacencyListDiv = document.getElementById("adjacency-list");
+      let adjacencyText = "Adjacency List: <br>";
+      for (let node in adjList) {
+        adjacencyText += `Node ${node}: ${adjList[node].join(', ')}<br>`;
+      }
+      adjacencyListDiv.innerHTML = adjacencyText;
+    }
+
+    // Handle click on a node
+    function handleNodeClick(node, index) {
+      if (currentBFSOrder.length < validBFSOrders[0].length) {
+        currentBFSOrder.push(node);
+        const nodes = document.querySelectorAll(".node");
+        nodes[index].classList.add("visited");
+        nodes[index].classList.add("selected");
+
+        if (currentBFSOrder.length === validBFSOrders[0].length) {
+          if (validBFSOrders.some(order => arraysEqual(order, currentBFSOrder))) {
+            clearInterval(timer); // Stop the timer
+            messageDiv.textContent = `Congratulations, You Won! Time Taken: ${timeElapsed}s`;
+            if (level < maxLevel) {
+              level++; // Increase the level
+              setTimeout(() => {
+                startButton.disabled = false; // Allow the user to start again for the next level
+                startButton.textContent = "Start Next Level";
+                messageDiv.textContent += ` You've cleared this round!`;
+              }, 2000); // Wait a few seconds before moving to the next level
+            } else {
+              messageDiv.textContent = `Game Over! You've completed all the levels.`;
+              startButton.disabled = true; // Disable the start button when the game ends
+            }
+          } else {
+            alert("Incorrect Order! Try Again.");
+            resetGame();
+            generateGraph(level);
+          }
+        }
+      }
+    }
+
+    // Function to update the timer every second
+    function updateTimer() {
+      timeElapsed++;
+      timerDiv.textContent = `Time: ${timeElapsed}s`;
+    }
+
+    // Function to start the game
+    function startGame() {
+      resetGame();
+      generateGraph(level); // Generate graph based on the current level
+      messageDiv.textContent = ""; // Reset any message
+      startButton.disabled = true;
+      timeElapsed = 0;
+      timerDiv.textContent = `Time: 0s`;
+      timer = setInterval(updateTimer, 1000); // Start timer
+    }
+
+    // Reset game state
+    function resetGame() {
+      currentBFSOrder = [];
+      clearInterval(timer);
+      messageDiv.textContent = "";
+      graphDiv.innerHTML = "";
+      timerDiv.textContent = "Time: 0s";
+    }
+
+    // Utility function to compare two arrays
+    function arraysEqual(a, b) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+        if (a[i] !== b[i]) return false;
+      }
+      return true;
+    }
+
+    startButton.addEventListener("click", startGame);
+  </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Selection Sort Game</title>
+  <link rel="stylesheet" href="BubbleSort.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">Selection Sort Game</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Interactive Selection Sort Game</h1>
+    <p>Select the minimum element from the unsorted portion and swap it with the current element.</p>
+    
+    <!-- Display the current i-th element -->
+    <div id="current-element">Current element (i): </div>
+
+    <div class="container">
+      <div id="bar-container" class="bar-container"></div>
+      <div>
+        <select id="min-select"></select>
+        <button id="min-btn">Select Minimum</button>
+      </div>
+      <div id="feedback"></div>
+      <div class="scoreboard">
+        <p>Right Answers: <span id="right-counter">0</span></p>
+        <p>Wrong Answers: <span id="wrong-counter">0</span></p>
+      </div>
+      <button id="reset-btn">Reset</button>
+      <button id="next-btn">Next</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Interactive Selection Sort Game. All rights reserved.</p>
+  </footer>
+
+  <script src="SelectionSort.js"></script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .section {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #00adb5;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .btn {
+            text-decoration: none;
+            background: #00adb5;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-5px);
+            background: #393e46;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 1rem;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Algorithm Learning Hub</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Knapsack Problem</h2>
+            <p>The knapsack problem is a combinatorial optimization problem where the goal is to maximize the total value of items placed in a knapsack of limited capacity.</p>
+            <div class="buttons">
+                <a href="Knapsack.html" class="btn">Knapsack Game</a>
+                <a href="https://en.wikipedia.org/wiki/Knapsack_problem" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="knapsack-video.gif" alt="Knapsack Problem Animation">
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Dijkstra's Algorithm</h2>
+            <p>Dijkstra's algorithm finds the shortest paths between nodes in a graph, which may represent, for example, road networks.It was developed by Dutch computer scientist Edsger W. Dijkstra in 1956.</p>
+            <div class="buttons">
+                <a href="https://6797898be4546b68510e66c7--clever-quokka-557551.netlify.app/" class="btn">Dijkstra's Game</a>
+                <a href="https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm" target="_blank" class="btn">Learn More</a>
+            </div>
+            <img src="dijkstra.gif" alt="Dijkstra's Algorithm Animation" style="width: 300px; height: 200px; margin-top: 20px;">
+
+
+        </div>
+
+        <div class="section">
+            <h2>Huffman's Algorithm</h2>
+            <p>Huffman's algorithm is a greedy algorithm used for lossless data compression by constructing an optimal prefix code.</p>
+            <div class="buttons">
+                <a href="Huffman.html" class="btn">Huffman's Game</a>
+                <a href="https://en.wikipedia.org/wiki/Huffman_coding" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="huffman-video.gif" alt="Huffman's Algorithm Animation">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Floyd's Algorithm</h2>
+            <p>Floyd's algorithm, also known as Floyd-Warshall, finds the shortest paths between all pairs of nodes in a weighted graph.</p>
+            <div class="buttons">
+                <a href="Floyd.html" class="btn">Floyd's Game</a>
+                <a href="https://en.wikipedia.org/wiki/Floyd-Warshall_algorithm" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="floyd-video.gif" alt="Floyd's Algorithm Animation">
+            </div>
+        </div>
+    </div>
+    <div class="footer">&copy; 2025 Algorithm Learning Hub. All Rights Reserved.</div>
+</body>
+</html>

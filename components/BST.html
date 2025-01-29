@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive BST Validator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #273b40, #1d1d1d);
+            color: #95d6d6;
+        }
+        canvas {
+            background-color: #2a2a2a;
+            border: 1px solid black;
+            display: block;
+            margin: 20px auto;
+        }
+        button, select, input {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Interactive Binary Search Tree Validator</h1>
+    <p>Set the root, assign left and right children, and check if the tree is a valid BST!</p>
+
+    <div>
+        <label for="nodeCount">Number of nodes:</label>
+        <input type="number" id="nodeCount" min="1" placeholder="e.g., 5">
+        <button onclick="generateNodes()">Generate Nodes</button>
+        <br>
+        <select id="nodeSelector"></select>
+        <button onclick="setRoot()">Set Root</button>
+        <button onclick="assignLeftChild()">Set Left Child</button>
+        <button onclick="assignRightChild()">Set Right Child</button>
+        <button onclick="validateBST()">Validate BST</button>
+    </div>
+    <p id="result"></p>
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let nodes = [];
+        let connections = {};
+        let root = null;
+        let assignedNodes = new Set();
+
+        function generateNodes() {
+            const nodeCount = parseInt(document.getElementById('nodeCount').value, 10);
+            if (isNaN(nodeCount) || nodeCount <= 0) {
+                document.getElementById('result').textContent = 'Please enter a valid number of nodes!';
+                return;
+            }
+
+            nodes = [];
+            connections = {};
+            root = null;
+            assignedNodes.clear();
+
+            const values = new Set();
+            while (values.size < nodeCount) {
+                values.add(Math.floor(Math.random() * 100) + 1);
+            }
+            nodes = Array.from(values);
+            nodes.forEach(value => {
+                connections[value] = { left: null, right: null };
+            });
+
+            updateNodeSelector();
+            drawTree();
+            document.getElementById('result').textContent = 'Nodes generated. Set the root and relationships!';
+        }
+
+        function updateNodeSelector() {
+            const nodeSelector = document.getElementById('nodeSelector');
+            nodeSelector.innerHTML = '';
+            nodes.forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = `Node ${value}`;
+                nodeSelector.appendChild(option);
+            });
+        }
+
+        function setRoot() {
+            const selectedNode = parseInt(document.getElementById('nodeSelector').value, 10);
+            if (root) {
+                document.getElementById('result').textContent = 'Root is already set! Reset the tree to change the root.';
+                return;
+            }
+            if (assignedNodes.has(selectedNode)) {
+                document.getElementById('result').textContent = `Node ${selectedNode} is already assigned and cannot be set as root!`;
+                return;
+            }
+            root = selectedNode;
+            assignedNodes.add(selectedNode);
+            drawTree();
+            document.getElementById('result').textContent = `Root set to Node ${root}`;
+        }
+
+        function assignLeftChild() {
+            const selectedNode = parseInt(document.getElementById('nodeSelector').value, 10);
+            if (!root) {
+                document.getElementById('result').textContent = 'Set the root before assigning children!';
+                return;
+            }
+            if (assignedNodes.has(selectedNode)) {
+                document.getElementById('result').textContent = `Node ${selectedNode} is already assigned and cannot be reassigned!`;
+                return;
+            }
+
+            const parent = parseInt(prompt('Enter parent node for left child:'), 10);
+            if (!connections[parent]) {
+                document.getElementById('result').textContent = 'Invalid parent node!';
+                return;
+            }
+            if (connections[parent].left) {
+                document.getElementById('result').textContent = `Node ${parent} already has a LEFT child!`;
+                return;
+            }
+            if (parent === selectedNode) {
+                document.getElementById('result').textContent = 'A node cannot be its own left child!';
+                return;
+            }
+            connections[parent].left = selectedNode;
+            assignedNodes.add(selectedNode);
+            drawTree();
+            document.getElementById('result').textContent = `Node ${selectedNode} set as LEFT child of Node ${parent}`;
+        }
+
+        function assignRightChild() {
+            const selectedNode = parseInt(document.getElementById('nodeSelector').value, 10);
+            if (!root) {
+                document.getElementById('result').textContent = 'Set the root before assigning children!';
+                return;
+            }
+            if (assignedNodes.has(selectedNode)) {
+                document.getElementById('result').textContent = `Node ${selectedNode} is already assigned and cannot be reassigned!`;
+                return;
+            }
+
+            const parent = parseInt(prompt('Enter parent node for right child:'), 10);
+            if (!connections[parent]) {
+                document.getElementById('result').textContent = 'Invalid parent node!';
+                return;
+            }
+            if (connections[parent].right) {
+                document.getElementById('result').textContent = `Node ${parent} already has a RIGHT child!`;
+                return;
+            }
+            if (parent === selectedNode) {
+                document.getElementById('result').textContent = 'A node cannot be its own right child!';
+                return;
+            }
+            connections[parent].right = selectedNode;
+            assignedNodes.add(selectedNode);
+            drawTree();
+            document.getElementById('result').textContent = `Node ${selectedNode} set as RIGHT child of Node ${parent}`;
+        }
+
+        function drawTree() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const positions = {};
+            const assignPositions = (node, x, y, offset) => {
+                if (!node) return;
+                positions[node] = { x, y };
+                const { left, right } = connections[node];
+                assignPositions(left, x - offset, y + 100, offset / 2);
+                assignPositions(right, x + offset, y + 100, offset / 2);
+            };
+
+            assignPositions(root, canvas.width / 2, 50, 200);
+
+            const drawEdges = (node) => {
+                if (!node) return;
+                const { left, right } = connections[node];
+                const currentPos = positions[node];
+                if (left) {
+                    drawLine(currentPos, positions[left]);
+                    drawEdges(left);
+                }
+                if (right) {
+                    drawLine(currentPos, positions[right]);
+                    drawEdges(right);
+                }
+            };
+
+            drawEdges(root);
+
+            Object.entries(positions).forEach(([node, pos]) => {
+                drawNode(node, pos.x, pos.y);
+            });
+        }
+
+        function drawNode(value, x, y) {
+            ctx.beginPath();
+            ctx.arc(x, y, 20, 0, 2 * Math.PI);
+            ctx.fillStyle = value == root ? 'green' : 'lightblue';
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = 'black';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(value, x, y);
+        }
+
+        function drawLine(start, end) {
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.lineTo(end.x, end.y);
+            ctx.stroke();
+        }
+
+        function validateBST() {
+            const isBST = (node, min, max) => {
+                if (!node) return true;
+                if (node <= min || node >= max) return false;
+                return (
+                    isBST(connections[node].left, min, node) &&
+                    isBST(connections[node].right, node, max)
+                );
+            };
+
+            const valid = isBST(root, -Infinity, Infinity);
+            document.getElementById('result').textContent = valid
+                ? 'Valid BST!'
+                : 'Invalid BST!';
+        }
+    </script>
+</body>
+</html>

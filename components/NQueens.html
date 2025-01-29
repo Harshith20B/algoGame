@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N-Queens Game</title>
+    <link rel="stylesheet" href="NQueens.css">
+</head>
+<body>
+    <div class="container">
+        <div class="background-animation"></div>
+        
+        <div class="game-container">
+            <h1>N-Queens Game</h1>
+            
+            <div class="controls">
+                <div class="size-control">
+                    <label for="board-size">Board Size:</label>
+                    <select id="board-size">
+                        <option value="4">4x4</option>
+                        <option value="5">5x5</option>
+                        <option value="6">6x6</option>
+                        <option value="7">7x7</option>
+                        <option value="8" selected>8x8</option>
+                    </select>
+                </div>
+                <button id="reset-board">Reset Board</button>
+            </div>
+
+            <div class="game-stats">
+                <p>Time: <span id="timer">00:00</span></p>
+                <p>Points: <span id="points">0</span></p>
+                <p>Queens: <span id="queens-count">0/8</span></p>
+            </div>
+
+            <div id="message" class="message"></div>
+
+            <div id="game-board" class="game-board"></div>
+
+            <button id="hint-button" class="hint-button">Get Hint</button>
+        </div>
+    </div>
+    <script src="NQueens.js"></script>
+</body>
+</html>

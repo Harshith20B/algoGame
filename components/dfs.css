@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #273b40; /* Dark background */
+  }
+  
+  #game-container {
+    text-align: center;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #cae9ea; /* Light cyan background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #1d1d1d; /* Dark text for readability */
+  }
+  
+  h1 {
+    color: #208cdc; /* Blue heading color */
+  }
+  
+  #maze {
+    border: 2px solid #3c4748; /* Border color for the maze */
+    margin: 20px 0;
+  }
+  
+  #instructions {
+    font-size: 14px;
+    color: #3c4748;
+  }
+  
+  #start-button {
+    padding: 10px 20px;
+    background-color: #208cdc; /* Blue button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  #start-button:hover {
+    background-color: #1d1d1d; /* Darker color on hover */
+  }
+  
+  #timer {
+    font-size: 20px;
+    font-weight: bold;
+    color: #208cdc;
+    margin-top: 10px;
+  }
+  
+  #scores-section {
+    margin-top: 20px;
+    text-align: left;
+  }
+  
+  #scores-section h2 {
+    margin-bottom: 10px;
+    color: #1d1d1d;
+  }
+  
+  #scores-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  #scores-list li {
+    background-color: #3c4748; /* Darker list background */
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }

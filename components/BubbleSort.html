@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Bubble Sort Game</title>
+  <link rel="stylesheet" href="BubbleSort.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">Bubble Sort Game</div>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h1>Interactive Bubble Sort Game</h1>
+    <p>Decide whether to switch the two highlighted numbers.</p>
+    <div class="container">
+      <div id="bar-container" class="bar-container"></div>
+      <div>
+        <button id="switch-btn">Switch</button>
+        <button id="dont-switch-btn">Don't Switch</button>
+      </div>
+      <div id="feedback"></div>
+      <div class="scoreboard">
+        <p>Right Answers: <span id="right-counter">0</span></p>
+        <p>Wrong Answers: <span id="wrong-counter">0</span></p>
+      </div>
+      <button id="reset-btn">Reset</button>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Interactive Bubble Sort Game. All rights reserved.</p>
+  </footer>
+
+  <script src="BubbleSort.js"></script>
+</body>
+</html>

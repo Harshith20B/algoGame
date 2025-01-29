@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Treasure Hunter - Knapsack Algorithm Game</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: linear-gradient(to bottom, #273b40, #1d1d1d);
+            color: #e0e0e0;
+        }
+        .card {
+            background-color: #1d1d1d;
+            border: 1px solid #404040;
+            color: #e0e0e0;
+        }
+        .card-title {
+            color: #208cdc;
+        }
+        .text-muted {
+            color: #a0a0a0 !important;
+        }
+        .item-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #1d1d1d;
+            color: #e0e0e0;
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
+        }
+        .selected {
+            border: 3px solid #208cdc !important;
+            background-color: #273b40 !important;
+        }
+        .disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .feedback {
+            height: 50px;
+        }
+        .difficulty-btn {
+            width: 200px;
+            margin: 10px;
+            padding: 15px;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+        .difficulty-btn:hover {
+            transform: scale(1.05);
+        }
+        .home-container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .game-container {
+            display: none;
+        }
+        .modal-content {
+            background-color: #1d1d1d;
+            color: #e0e0e0;
+        }
+        .modal-header {
+            border-bottom: 1px solid #404040;
+        }
+        .modal-footer {
+            border-top: 1px solid #404040;
+        }
+        .glow-text {
+            color: #ffffff;
+            text-shadow: 0 0 10px #208cdc;
+        }
+        .btn-custom {
+            background-color: #1d1d1d;
+            border: 1px solid #208cdc;
+            color: #208cdc;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            background-color: #208bdcca;
+            color: #273b40;
+        }
+        .alert-success {
+            background-color: #1a472a;
+            color: #00ff9d;
+            border-color: #00ff9d;
+        }
+        .alert-warning {
+            background-color: #4d3800;
+            color: #ffb700;
+            border-color: #ffb700;
+        }
+        .card-text {
+            color: #e0e0e0;
+        }
+        .progress {
+            background-color: #404040;
+        }
+        .progress-bar {
+            color: #273b40;
+            font-weight: bold;
+        }
+        /* Fix for modal close button */
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        /* Fix for emoji visibility */
+        .item-card h1 {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+    </head>
+<body>
+    <!-- Home Screen -->
+    <div class="home-container" id="homeScreen">
+        <div class="text-center">
+            <h1 class="display-4 mb-4 glow-text">🎮 Knapsack Treasure Hunter</h1>
+            <h3 class="mb-4 text-muted">Master the Knapsack Algorithm</h3>
+            <div class="d-flex flex-column align-items-center">
+                <button class="btn difficulty-btn btn-custom" onclick="startGame('easy')">Easy Mode</button>
+                <button class="btn difficulty-btn btn-custom" onclick="startGame('medium')">Medium Mode</button>
+                <button class="btn difficulty-btn btn-custom" onclick="startGame('hard')">Hard Mode</button>
+                <button class="btn difficulty-btn btn-custom" onclick="showHowToPlay()">How to Play</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div class="container py-5 game-container" id="gameScreen">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="mb-3 glow-text">🎮 Knapsack Treasure Hunter</h1>
+                <h5 class="text-muted">Level: <span id="difficultyDisplay">Medium</span></h5>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mission Briefing</h5>
+                        <p>Backpack Capacity: <span id="capacity" class="fw-bold">10</span> kg</p>
+                        <div class="progress bg-dark">
+                            <div id="weightProgress" class="progress-bar bg-info" role="progressbar" style="width: 0%">
+                                0/10 kg
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div id="feedback" class="alert d-none"></div>
+            </div>
+        </div>
+
+        <div class="row" id="itemsContainer">
+            <!-- Items will be dynamically added here -->
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <button id="checkSolution" class="btn btn-custom btn-lg">Check Solution</button>
+                <button id="newGame" class="btn btn-custom btn-lg ms-2">New Game</button>
+                <button onclick="goHome()" class="btn btn-custom btn-lg ms-2">Home</button>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Stats</h5>
+                        <p>Total Value: $<span id="totalValue">0</span></p>
+                        <p>Total Weight: <span id="totalWeight">0</span>/10 kg</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How To Play Modal -->
+    <div class="modal fade" id="howToPlayModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">How to Play</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>The Knapsack Problem</h6>
+                    <p>The Knapsack Problem is a classic optimization challenge where you need to select items with the highest total value while staying within a weight limit.</p>
+                    
+                    <h6>Game Rules:</h6>
+                    <ul>
+                        <li>Click items to add them to your backpack</li>
+                        <li>Stay within the weight limit</li>
+                        <li>Try to maximize the total value</li>
+                    </ul>
+
+                    <h6>Difficulty Levels:</h6>
+                    <ul>
+                        <li>Easy: 6kg capacity, 4 items</li>
+                        <li>Medium: 10kg capacity, 6 items</li>
+                        <li>Hard: 15kg capacity, 10 items</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        class KnapsackGame {
+            constructor(difficulty) {
+                this.setDifficultySettings(difficulty);
+                this.items = [];
+                this.selectedItems = new Set();
+                this.initializeGame();
+                this.setupEventListeners();
+            }
+
+            setDifficultySettings(difficulty) {
+                switch(difficulty) {
+                    case 'easy':
+                        this.capacity = 6;
+                        this.numItems = 4;
+                        document.getElementById('difficultyDisplay').textContent = 'Easy';
+                        break;
+                    case 'hard':
+                        this.capacity = 15;
+                        this.numItems = 10;
+                        document.getElementById('difficultyDisplay').textContent = 'Hard';
+                        break;
+                    default: // medium
+                        this.capacity = 10;
+                        this.numItems = 6;
+                        document.getElementById('difficultyDisplay').textContent = 'Medium';
+                }
+                document.getElementById('capacity').textContent = this.capacity;
+            }
+
+            initializeGame() {
+                const itemTypes = [
+                    { name: "Gold Crown", emoji: "👑" },
+                    { name: "Diamond", emoji: "💎" },
+                    { name: "Ruby", emoji: "❤️" },
+                    { name: "Ancient Scroll", emoji: "📜" },
+                    { name: "Magic Potion", emoji: "⚗️" },
+                    { name: "Crystal Ball", emoji: "🔮" },
+                    { name: "Ancient Coin", emoji: "🪙" },
+                    { name: "Mystic Book", emoji: "📚" }
+                ];
+
+                this.items = [];
+                this.selectedItems.clear();
+
+                for (let i = 0; i < this.numItems; i++) {
+                    const randomType = itemTypes[Math.floor(Math.random() * itemTypes.length)];
+                    this.items.push({
+                        id: i,
+                        name: randomType.name,
+                        emoji: randomType.emoji,
+                        weight: Math.floor(Math.random() * 5) + 1,
+                        value: Math.floor(Math.random() * 100) + 20
+                    });
+                }
+
+                this.renderItems();
+                this.updateStats();
+            }
+
+            setupEventListeners() {
+                document.getElementById('checkSolution').addEventListener('click', () => this.checkSolution());
+                document.getElementById('newGame').addEventListener('click', () => this.initializeGame());
+            }
+
+            renderItems() {
+                const container = document.getElementById('itemsContainer');
+                container.innerHTML = '';
+
+                this.items.forEach(item => {
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'col-md-4 mb-4';
+                    itemCard.innerHTML = `
+                        <div class="card item-card" data-id="${item.id}">
+                            <div class="card-body text-center">
+                                <h1>${item.emoji}</h1>
+                                <h5 class="card-title">${item.name}</h5>
+                                <p class="card-text">
+                                    Weight: ${item.weight} kg<br>
+                                    Value: $${item.value}
+                                </p>
+                            </div>
+                        </div>
+                    `;
+
+                    itemCard.querySelector('.card').addEventListener('click', () => this.toggleItem(item.id));
+                    container.appendChild(itemCard);
+                });
+            }
+
+            toggleItem(id) {
+                const item = this.items.find(i => i.id === id);
+                const card = document.querySelector(`[data-id="${id}"]`);
+                
+                if (this.selectedItems.has(id)) {
+                    this.selectedItems.delete(id);
+                    card.classList.remove('selected');
+                } else {
+                    const currentWeight = this.calculateTotalWeight();
+                    if (currentWeight + item.weight <= this.capacity) {
+                        this.selectedItems.add(id);
+                        card.classList.add('selected');
+                    } else {
+                        this.showFeedback("Too heavy! Remove some items first.", "warning");
+                    }
+                }
+
+                this.updateStats();
+            }
+
+            calculateTotalWeight() {
+                return Array.from(this.selectedItems)
+                    .map(id => this.items.find(item => item.id === id))
+                    .reduce((sum, item) => sum + item.weight, 0);
+            }
+
+            calculateTotalValue() {
+                return Array.from(this.selectedItems)
+                    .map(id => this.items.find(item => item.id === id))
+                    .reduce((sum, item) => sum + item.value, 0);
+            }
+
+            updateStats() {
+                const totalWeight = this.calculateTotalWeight();
+                const totalValue = this.calculateTotalValue();
+                
+                document.getElementById('totalWeight').textContent = totalWeight;
+                document.getElementById('totalValue').textContent = totalValue;
+                
+                const progressBar = document.getElementById('weightProgress');
+                const progressPercent = (totalWeight / this.capacity) * 100;
+                progressBar.style.width = `${progressPercent}%`;
+                progressBar.textContent = `${totalWeight}/${this.capacity} kg`;
+            }
+
+            showFeedback(message, type) {
+                const feedback = document.getElementById('feedback');
+                feedback.className = `alert alert-${type}`;
+                feedback.textContent = message;
+                feedback.classList.remove('d-none');
+
+                setTimeout(() => {
+                    feedback.classList.add('d-none');
+                }, 3000);
+            }
+
+            checkSolution() {
+                const totalValue = this.calculateTotalValue();
+                const optimal = this.findOptimalSolution();
+                
+                if (totalValue == optimal.value) {
+                    this.showFeedback("Great job! Your solution is optimal!", "success");
+                } else {
+                    this.showFeedback("Try again! There's a better combination possible.", "warning");
+                }
+            }
+
+            findOptimalSolution() {
+                const n = this.items.length;
+                const W = this.capacity;
+                const dp = Array(n + 1).fill().map(() => Array(W + 1).fill(0));
+
+                for (let i = 1; i <= n; i++) {
+                    for (let w = 0; w <= W; w++) {
+                        if (this.items[i-1].weight <= w) {
+                            dp[i][w] = Math.max(
+                                this.items[i-1].value + dp[i-1][w - this.items[i-1].weight],
+                                dp[i-1][w]
+                            );
+                        } else {
+                            dp[i][w] = dp[i-1][w];
+                        }
+                    }
+                }
+
+                return { value: dp[n][W] };
+            }
+        }
+
+        let currentGame = null;
+
+        function startGame(difficulty) {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            currentGame = new KnapsackGame(difficulty);
+        }
+
+        function goHome() {
+            document.getElementById('homeScreen').style.display = 'flex';
+            document.getElementById('gameScreen').style.display = 'none';
+        }
+
+        function showHowToPlay() {
+            const modal = new bootstrap.Modal(document.getElementById('howToPlayModal'));
+            modal.show();
+        }
+    </script>
+</body>
+</html>

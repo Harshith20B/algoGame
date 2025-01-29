@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Factorial Fiesta</title>
+  <style>
+    body {
+      font-family: 'Verdana', sans-serif;
+      margin: 0;
+      background: linear-gradient(to bottom, #1e2a38, #2c3e50);
+      color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    .game-wrapper {
+      width: 75%;
+      max-width: 900px;
+      background: #22313f;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.6);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .header div {
+      font-size: 20px;
+    }
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .main-game {
+      background: #34495e;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.5);
+    }
+    .question {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    #factorial-formula {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #f4f4f4;
+      font-style: italic;
+    }
+    #bubble-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .bubble {
+      width: 120px;
+      height: 120px;
+      background: #27ae60;
+      color: #fff;
+      font-size: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .bubble:hover {
+      background: #2ecc71;
+      transform: scale(1.1);
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    .snackbar {
+      visibility: hidden;
+      min-width: 250px;
+      margin-left: -125px;
+      background-color: #444;
+      color: #f4f4f4;
+      text-align: center;
+      border-radius: 5px;
+      padding: 16px;
+      position: fixed;
+      z-index: 1;
+      left: 50%;
+      bottom: 30px;
+      font-size: 17px;
+    }
+    .snackbar.show {
+      visibility: visible;
+      animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    }
+    @keyframes fadein {
+      from { bottom: 0; opacity: 0; }
+      to { bottom: 30px; opacity: 1; }
+    }
+    @keyframes fadeout {
+      from { bottom: 30px; opacity: 1; }
+      to { bottom: 0; opacity: 0; }
+    }
+    .lap-times {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+    .factorial-info {
+      margin-top: 30px;
+      font-size: 18px;
+      text-align: center;
+      color: #f4f4f4;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-wrapper">
+    <div class="title">Factorial Fiesta</div>
+    <div class="header">
+      <div>Time: <span id="timer">0:0:0</span></div>
+      <div>Score: <span id="score">0</span></div>
+    </div>
+    <div class="main-game">
+      <div class="question">Click the correct bubble with factorial <span id="factorial-num"></span></div>
+      <div id="bubble-container"></div>
+      <div id="factorial-formula"></div> <!-- Factorial formula displayed here -->
+      <button onclick="pauseTimer()">Pause Timer</button>
+      <div class="lap-times" id="lap-times"></div>
+    </div>
+  </div>
+  <div class="factorial-info">
+    Factorial of a number is calculated by:<br>
+    n! = n × (n-1) × (n-2) × (n-3) × ….× 3 × 2 × 1
+  </div>
+  <div id="snackbar"></div>
+
+  <script>
+    let score = 0;
+    let timerPaused = false;
+    let currentNumber = 0;
+    let timerInterval;
+    let totalSeconds = 0;
+    let laps = [];
+
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return `${hrs}:${mins}:${secs}`;
+    }
+
+    function updateTimer() {
+      totalSeconds++;
+      document.getElementById("timer").textContent = formatTime(totalSeconds);
+    }
+
+    function startTimer() {
+      totalSeconds = 0;
+      clearInterval(timerInterval);
+      timerPaused = false;
+      timerInterval = setInterval(() => {
+        if (!timerPaused) {
+          updateTimer();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      timerPaused = !timerPaused;
+    }
+
+    function showSnackbar(message) {
+      const snackbar = document.getElementById("snackbar");
+      snackbar.textContent = message;
+      snackbar.className = "snackbar show";
+      setTimeout(() => {
+        snackbar.className = snackbar.className.replace("show", "");
+      }, 3000);
+    }
+
+    function recordLap() {
+      const lapTime = formatTime(totalSeconds);
+      laps.push(`Lap ${laps.length + 1}: ${lapTime}`);
+      const lapTimesDiv = document.getElementById("lap-times");
+      lapTimesDiv.innerHTML = laps.join("<br>");
+    }
+
+    function generateBubbles(correctAnswer) {
+      const container = document.getElementById("bubble-container");
+      container.innerHTML = "";
+      const answers = [correctAnswer];
+
+      while (answers.length < 5) {
+        const random = Math.floor(Math.random() * (correctAnswer + 10)) + 1;
+        if (!answers.includes(random)) {
+          answers.push(random);
+        }
+      }
+
+      answers.sort(() => Math.random() - 0.5);
+
+      answers.forEach(answer => {
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+        bubble.textContent = answer;
+
+        bubble.onclick = () => {
+          if (answer === correctAnswer) {
+            score += 10;
+            document.getElementById("score").textContent = score;
+            if (score >= 100) {
+              recordLap();
+              showSnackbar("100 Points Achieved! Lap Recorded.");
+              resetScoreAndTimer();
+            } else {
+              showSnackbar("Correct! Moving to next level.");
+              nextLevel();
+            }
+          } else {
+            score = Math.max(0, score - 1);
+            document.getElementById("score").textContent = score;
+            showSnackbar("Wrong answer. Try again!");
+          }
+        };
+
+        container.appendChild(bubble);
+      });
+    }
+
+    function factorial(num) {
+      if (num === 0 || num === 1) return 1;
+      return num * factorial(num - 1);
+    }
+
+    function nextLevel() {
+      currentNumber = Math.floor(Math.random() * 10) + 1;
+      document.getElementById("factorial-num").textContent = currentNumber;
+      const correctAnswer = factorial(currentNumber);
+      
+      // Display factorial formula
+      
+      generateBubbles(correctAnswer);
+    }
+
+  
+
+    function resetScoreAndTimer() {
+      score = 0;
+      document.getElementById("score").textContent = score;
+      totalSeconds = 0;
+      startTimer();
+      nextLevel();
+    }
+
+    function resetGame() {
+      score = 0;
+      document.getElementById("score").textContent = score;
+      laps = [];
+      document.getElementById("lap-times").innerHTML = "";
+      nextLevel();
+      startTimer();
+    }
+
+    resetGame();
+  </script>
+</body>
+</html>

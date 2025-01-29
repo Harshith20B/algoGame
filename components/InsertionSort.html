@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insertion Sort Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(to bottom, #273b40, #1d1d1d);
+            margin: 0;
+            padding: 0;
+            color: #cae9ea;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5rem;
+            color: #cae9ea;
+        }
+
+        #game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1d1d1d;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            border: 2px solid #84bbe6;
+            width: 1000px;
+            height: 300px;
+        }
+
+        #array-container {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .array-item {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #3c4748;
+            color: #cae9ea;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 8px;
+            border: 2px solid #208cdc;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease;
+        }
+
+        .selected {
+            background-color: #587d9b;
+            transform: scale(1.2);
+        }
+
+        .sorted {
+            background-color: #196c55;
+        }
+
+        #action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #64bcff;
+            color: #1d1d1d;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button:hover {
+            background-color: #1c2464;
+            color:#cae9ea;
+            transform: translateY(-3px);
+        }
+
+        button:disabled {
+            background-color: #3c4748;
+            color: #cae9ea;
+            cursor: not-allowed;
+        }
+
+        #feedback {
+            margin-top: 10px;
+            font-size: 1.2rem;
+            color: #65c1c5;
+            font-weight: bold;
+        }
+
+        #scores-container {
+            margin-top: 20px;
+            color: #cae9ea;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 600px) {
+            .array-item {
+                width: 40px;
+                height: 40px;
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Insertion Sort Game</h1>
+    <div id="game-container">
+        <div id="array-container"></div>
+        <div id="action-buttons">
+            <button id="move-left">Move Left</button>
+            <button id="stick">Stick</button>
+        </div>
+        <div id="feedback"></div>
+        <br>
+        <button id="restart-game"><i class="fas fa-redo"></i> Restart Game</button>
+    </div>
+    <div id="scores-container">
+        <h2>Scores</h2>
+        <div id="scores"></div>
+    </div>
+
+    <script>
+        const arrayContainer = document.getElementById('array-container');
+        const moveLeftButton = document.getElementById('move-left');
+        const stickButton = document.getElementById('stick');
+        const restartButton = document.getElementById('restart-game');
+        const feedback = document.getElementById('feedback');
+        const scoresContainer = document.getElementById('scores');
+
+        let array = [];
+        let currentIndex = 1;
+        let gameStartTime, gameEndTime;
+        let highScore = localStorage.getItem('highScore') ? JSON.parse(localStorage.getItem('highScore')) : null;
+        let scores = [];
+
+        function generateRandomArray(size) {
+            const arr = [];
+            for (let i = 0; i < size; i++) {
+                arr.push(Math.floor(Math.random() * 100) + 1);
+            }
+            return arr;
+        }
+
+        function renderArray() {
+            arrayContainer.innerHTML = '';
+            array.forEach((value, index) => {
+                const item = document.createElement('div');
+                item.classList.add('array-item');
+                item.textContent = value;
+                if (index === currentIndex) {
+                    item.classList.add('selected');
+                }
+                if (index < currentIndex) {
+                    item.classList.add('sorted');
+                }
+                arrayContainer.appendChild(item);
+            });
+        }
+
+        function checkMove(moveLeft) {
+            if (moveLeft && currentIndex > 0 && array[currentIndex] < array[currentIndex - 1]) {
+                [array[currentIndex], array[currentIndex - 1]] = [array[currentIndex - 1], array[currentIndex]];
+                currentIndex--;
+                feedback.textContent = `Good call - ${array[currentIndex + 1]} moved left.`;
+            } else if (!moveLeft && (currentIndex === 0 || array[currentIndex] >= array[currentIndex - 1])) {
+                feedback.textContent = `Good call - ${array[currentIndex]} stayed in place.`;
+                currentIndex++;
+            } else {
+                feedback.textContent = `Wrong choice - try again.`;
+            }
+
+            if (currentIndex >= array.length) {
+                feedback.textContent = 'Congratulations! The array is sorted!';
+                gameEndTime = Date.now();
+                const gameTime = (gameEndTime - gameStartTime) / 1000; // Time in seconds
+                scores.push(gameTime);
+                displayScores();
+
+                if (!highScore || gameTime < highScore.time) {
+                    alert(`New High Score! Time: ${gameTime.toFixed(2)} seconds`);
+                    highScore = { time: gameTime, date: new Date().toLocaleString() };
+                    localStorage.setItem('highScore', JSON.stringify(highScore));
+                }
+
+                moveLeftButton.disabled = true;
+                stickButton.disabled = true;
+            }
+
+            renderArray();
+        }
+
+        function restartGame() {
+            array = generateRandomArray(8);
+            currentIndex = 1;
+            feedback.textContent = '';
+            moveLeftButton.disabled = false;
+            stickButton.disabled = false;
+            gameStartTime = Date.now();
+            renderArray();
+        }
+
+        function displayScores() {
+            scoresContainer.innerHTML = scores.map((time, index) => `<p>Game ${index + 1}: ${time.toFixed(2)} seconds</p>`).join('');
+        }
+
+        moveLeftButton.addEventListener('click', () => checkMove(true));
+        stickButton.addEventListener('click', () => checkMove(false));
+        restartButton.addEventListener('click', restartGame);
+
+        restartGame();
+    </script>
+</body>
+</html>

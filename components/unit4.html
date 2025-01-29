@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .section {
+            background: #16213e;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 15px;
+            color: #00adb5;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        .btn {
+            text-decoration: none;
+            background: #00adb5;
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-5px);
+            background: #393e46;
+        }
+        .footer {
+            margin-top: 50px;
+            font-size: 1rem;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>AlgoQuest</h1>
+    <div class="container">
+        <div class="section">
+            <h2>Insertion Sort</h2>
+            <p>Insertion sort is a simple and intuitive sorting algorithm that builds the final sorted array one item at a time. It's particularly useful for small datasets or nearly sorted data.</p>
+            <div class="buttons">
+                <a href="InsertionSort.html" class="btn">Insertion Sort</a>
+                <a href="https://en.wikipedia.org/wiki/Insertion_sort" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="InsertionSort.gif" alt="Insertion Sort Animation">
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Depth First Search</h2>
+            <p>Depth-first search (DFS) is an algorithm for traversing or searching tree or graph data structures1234. It starts at the root node and explores as far as possible along each branch before backtracking.</p>
+            <div class="buttons">
+                <a href="dfs.html" class="btn">DFS game</a>
+                <a href="https://en.wikipedia.org/wiki/Depth-first_search" target="_blank" class="btn">Learn More</a>
+            </div>
+            <img src="dfs.gif" alt="DFS Animation" style="width: 300px; height: 200px; margin-top: 20px;">
+
+
+        </div>
+
+        <div class="section">
+            <h2>AVL tree</h2>
+            <p> AVL tree (named after inventors Adelson-Velsky and Landis) is a self-balancing binary search tree.The AVL tree is named after its two Soviet inventors, Georgy Adelson-Velsky and Evgenii Landis.</p>
+            <div class="buttons">
+                <a href="AVLtree.html" class="btn">AVL Tree</a>
+                <a href="https://en.wikipedia.org/wiki/AVL_tree" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="AVL.gif" alt="AVL Tree Animation">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>BST Algorithm</h2>
+            <p> binary search tree (BST) is a data structure with the key of each internal node being greater than all the keys in the respective node's left subtree and less than the ones in its right subtree. </p>
+            <div class="buttons">
+                <a href="BST.html" class="btn">BST Game</a>
+                <a href="https://en.wikipedia.org/wiki/Binary_search_tree" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="BST.gif" alt="Floyd's Algorithm Animation">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Topological Sorting</h2>
+            <p> Topological sort of a directed graph is a linear ordering of its vertices such that for every directed edge (u,v) from vertex u to vertex v, u comes before v in the ordering.</p>
+            <div class="buttons">
+                <a href="TopologicalSorting.html" class="btn">Topological Sorting</a>
+                <a href="https://en.wikipedia.org/wiki/Topological_sorting" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="TopologicalSorting.gif" alt="Topological Sorting Animation">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Breadth First Search</h2>
+            <p> Breadth First Search (BFS) is a fundamental graph traversal algorithm. It begins with a node, then first traverses all its adjacent. Once all adjacent are visited, then their adjacent are traversed.</p>
+            <div class="buttons">
+                <a href="BFS.html" class="btn">Breadth First Search</a>
+                <a href="https://en.wikipedia.org/wiki/Breadth-first_search" target="_blank" class="btn">Learn More</a>
+            </div>
+            <div class="image-container">
+                <img src="BFS.gif" alt="BFS Animation">
+            </div>
+        </div>
+
+    </div>
+    <div class="footer">&copy; 2025 AlgoQuest. All Rights Reserved.</div>
+</body>
+</html>
