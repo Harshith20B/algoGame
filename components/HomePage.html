@@ -6,6 +6,7 @@
     <title>Algorithm Roadmap</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <h1>AlgoQuest</h1>
@@ -43,6 +44,42 @@
            <h1>Level up your coding with games,<br> puzzles, and challenges.</h1>
         </div>
     </main>
+    // Add this script section just before </body> in index.html
+<script>
+function updateAuthButtons() {
+    const token = localStorage.getItem('token');
+    const loginBtn = document.querySelector('.login-btn');
+    const logoutBtn = document.querySelector('.logout-btn') || document.createElement('button');
+    
+    if (token) {
+        // User is logged in
+        loginBtn.style.display = 'none';
+        
+        if (!document.querySelector('.logout-btn')) {
+            logoutBtn.className = 'logout-btn';
+            logoutBtn.textContent = 'Logout';
+            logoutBtn.onclick = handleLogout;
+            loginBtn.parentNode.insertBefore(logoutBtn, loginBtn);
+        }
+        logoutBtn.style.display = 'block';
+    } else {
+        // User is logged out
+        loginBtn.style.display = 'block';
+        if (document.querySelector('.logout-btn')) {
+            logoutBtn.style.display = 'none';
+        }
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    updateAuthButtons();
+}
+
+// Check auth state on page load
+document.addEventListener('DOMContentLoaded', updateAuthButtons);
+</script>
 </body>
 </html>
 

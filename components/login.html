@@ -24,5 +24,44 @@
             </form>
         </div>
     </div>
+    <script src="auth.js"></script>
+    <script>
+        const loginForm = document.querySelector('form');
+        const errorMessage = document.createElement('p');
+        errorMessage.style.color = 'red';
+        errorMessage.style.display = 'none';
+        loginForm.appendChild(errorMessage);
+        
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+        
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || 'Login failed');
+                }
+
+                const data = await response.json();
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', data.userId);
+                window.location.href = 'HomePage.html';  // Redirect to home page
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+            }
+        });
+
+        </script>
 </body>
 </html>

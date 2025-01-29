@@ -2,7 +2,6 @@ const getParentIndex = (index) => Math.floor((index - 1) / 2);
 const getLeftChildIndex = (index) => 2 * index + 1;
 const getRightChildIndex = (index) => 2 * index + 2;
 
-// Calculate node positions for visualization remains the same
 function calculateNodePosition(index) {
     const levelWidth = 800;
     const levelHeight = 80;
@@ -13,8 +12,7 @@ function calculateNodePosition(index) {
     const y = (level + 1) * levelHeight;
     return { x, y };
 }
-//6 phases
-// Game phases and their instructions remain the same
+
 const PHASES = {
     INITIAL: {
         name: 'Initial Array',
@@ -42,7 +40,6 @@ const PHASES = {
     }
 };
 
-// Game state remains the same
 let gameState = {
     initialArray: [],
     heap: [],
@@ -59,7 +56,6 @@ let gameState = {
     heapSize: 0
 };
 
-// Initialize game remains mostly the same
 function initializeGame() {
     const numbers = Array.from({ length: 7 }, () => Math.floor(Math.random() * 99) + 1);
     
@@ -97,14 +93,12 @@ function initializeGame() {
         drawHeap();
     }, 1000);
 }
-
 // Update phase display
 function updatePhaseDisplay() {
     const phase = PHASES[gameState.phase];
     document.getElementById('currentPhase').textContent = phase.name;
     document.getElementById('instructions').textContent = phase.instructions;
 }
-// Update array displays
 function updateArrayDisplays() {
     document.getElementById('initialArray').innerHTML = gameState.initialArray
         .map(num => `<div class="array-item">${num}</div>`)
@@ -113,14 +107,13 @@ function updateArrayDisplays() {
         .map(num => `<div class="array-item sorted">${num}</div>`)
         .join('');
 }
-// Update score display
-// Update score display - modified version
+
 function updateScoreDisplay() {
     document.getElementById('score-controls').textContent = gameState.score;
     document.getElementById('mistakes-controls').textContent = gameState.mistakes;
     document.getElementById('timer-controls').textContent = `${gameState.timer}s`;
 }
-// Find next heapify step
+
 function findNextHeapifyStep() {
     const n = gameState.heapSize;
     let lastParentIdx = Math.floor(n / 2) - 1;
@@ -188,7 +181,6 @@ function handleNodeClick(index) {
     drawHeap();
 }
 
-// Handle heapify phase clicks
 function handleHeapifyClick(index) {
     if (!gameState.expectedSwap) return;
     
@@ -198,7 +190,7 @@ function handleHeapifyClick(index) {
             showMessage('Good! Now select the node to swap with.', 'info');
         } else {
             gameState.mistakes++;
-            gameState.score = Math.max(0, gameState.score - 5); // Subtract 5 points for mistake
+            gameState.score = Math.max(0, gameState.score - 5);
             showMessage('Select either the parent or the larger child node.', 'error');
             updateScoreDisplay();
         }
@@ -231,20 +223,17 @@ function handleHeapifyClick(index) {
     }
 }
 
-// Handle swap root phase clicks
 function handleSwapRootClick(index) {
     const lastIndex = gameState.heapSize - 1;
     
     if (index === lastIndex) {
-        // Perform the swap
         [gameState.heap[0], gameState.heap[lastIndex]] = 
         [gameState.heap[lastIndex], gameState.heap[0]];
         
-        // Move largest element to sorted array
         gameState.sortedArray.unshift(gameState.heap[lastIndex]);
         gameState.heapSize--;
         
-        gameState.score += 20; // +20 points for root extraction
+        gameState.score += 20;
         updateScoreDisplay();
         gameState.selectedNodes = [];
         
@@ -266,33 +255,29 @@ function handleSwapRootClick(index) {
         }
     } else {
         gameState.mistakes++;
-        gameState.score = Math.max(0, gameState.score - 5); // Subtract 5 points for mistake
+        gameState.score = Math.max(0, gameState.score - 5);
         updateScoreDisplay();
         showMessage('Select the last unsorted node to swap with root!', 'error');
     }
 }
 
-// Update timer display
 function updateTimer() {
     gameState.timer++;
     updateScoreDisplay();
 }
 
-// Show message with appropriate styling
 function showMessage(text, type = 'info') {
     const messageEl = document.getElementById('message');
     messageEl.textContent = text;
     messageEl.className = `message ${type}`;
 }
 
-// Draw heap visualization
 function drawHeap() {
     const svg = document.getElementById('heapVisualization');
     svg.innerHTML = '';
     
     svg.setAttribute('viewBox', '0 0 800 300');
     
-    // Draw edges first
     for (let i = 0; i < gameState.heapSize; i++) {
         const leftChild = getLeftChildIndex(i);
         const rightChild = getRightChildIndex(i);
@@ -323,7 +308,6 @@ function drawHeap() {
         }
     }
     
-    // Draw nodes
     for (let i = 0; i < gameState.heapSize; i++) {
         const pos = calculateNodePosition(i);
         const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
@@ -339,7 +323,6 @@ function drawHeap() {
         circle.setAttribute('r', '24');
         circle.setAttribute('stroke-width', '2');
         
-        // Determine node color based on state
         let fillColor = '#1e293b';
         let strokeColor = '#334155';
         let textColor = '#e2e8f0';
@@ -374,7 +357,6 @@ function drawHeap() {
     }
 }
 
-// Show victory popup
 function showVictoryPopup() {
     gameState.canInteract = false;
     clearInterval(gameState.timerInterval);
@@ -409,17 +391,14 @@ function showVictoryPopup() {
     });
 }
 
-// Initialize event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    // New game button
     document.getElementById('newGame').addEventListener('click', () => {
         initializeGame();
     });
     
-    // Hint button
     document.getElementById('showHint').addEventListener('click', () => {
         if (gameState.expectedSwap) {
-            gameState.score = Math.max(0, gameState.score - 2); // -2 points for using hint
+            gameState.score = Math.max(0, gameState.score - 2);
             updateScoreDisplay();
             gameState.showHint = true;
             drawHeap();
@@ -432,19 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showMessage('No hints available at this moment', 'info');
         }
     });
-    // Example visualization button
-    document.getElementById('visualizeExample').addEventListener('click', () => {
-        const exampleSteps = [
-            "1. Start with an unsorted array",
-            "2. Build max heap by comparing parent with children",
-            "3. Swap root (largest) with last element",
-            "4. Reduce heap size and reheapify",
-            "5. Repeat steps 3-4 until sorted"
-        ];
-        
-        showMessage(exampleSteps.join(' → '), 'info');
-    });
     
-    // Start initial game
     initializeGame();
 });
